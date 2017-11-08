@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="UTF-8">
+	<title>RPG Game</title>
+
+	<script src = "js/phaser.min.js"></script>
+	<script src = "js/jquery-3.2.1.min.js"></script>
+	<script src = "js/Game.js"></script>
+	<script src = "js/Gamelvl2.js"></script>
+</head>
+<style>
+	body {
+		margin: 0;
+	}
+</style>
+</head>
+<body>
+<div id="myOL" class="overlay">
+	<div class="overlay-content">
+		<input type="text" id="username"  placeholder="Enter your name here" style="position: absolute; top: 300px; left: 180px;font-family: Comic Sans MS; font-size: 20px"; >
+		<button onclick="Username() "
+				style="background-color: #811aaf; font-family: Comic Sans MS;font-weight: bold; font-size: 20px;position: absolute; top: 300px; left: 480px; border: none; border-radius: 5px;">This is my name</button>
+	</div>
+</div>
+<script type="text/javascript">
+
+	$(document).ready(function () {
+	    $('.overlay').css({
+            'height': '600px',
+            'width': '800px',
+        	'position': 'absolute',
+        	'z-index': '1',
+        	'top': '0',
+        	'left': '0',
+        	'background-color': 'rgb(0,0,0)',
+       		'background-color': 'rgba(0,0,0, 0.7)',
+        	'overflow-x': 'hidden',
+        	'transition': '0.5s',
+		}
+		)
+        $('.overlay-content').css({
+                'position': 'relative',
+                'top': '10%',
+                'width': '100%',
+                'text-align': 'center',
+                'margin-top': '30px',
+            }
+        )
+        $("button").hover(function (){
+            $(this).css('background-color', '#3e8e41'
+			);
+            },
+			function () {
+            $(this).css({'background-color': '#811aaf',
+			})
+        })
+        $('button').click(function (){
+            $('.overlay').fadeOut(500, function() {
+                $(this).remove();
+            })
+        })
+    })
+
+    function Username () {
+        var username = document.getElementById("username").value;
+        var opening = game.add.text(game.world.centerX, 360, username + ", let's play the game!");
+        opening.anchor.setTo(0.5,0.5);
+        opening.font = 'Comic Sans MS';
+        opening.fontSize = 40;
+        opening.fill = 'white';
+        opening.fontWeight = 'bold';
+        opening.setShadow(10, 5, 'black', 0);
+    }
+
+var game = new Phaser.Game(800,600,Phaser.CANVAS, 'gamebox');
+
+function Boot(game){
+	this.preload = function() {
+
+	};
+	this.create = function() {
+		game.state.start('loading');
+	}
+}
+
+function Loading(game){
+	this.preload = function() {
+		game.load.tilemap('begin', 'assets/begin.json', null, Phaser.Tilemap.TILED_JSON);
+        //game.load.tilemap('nbegin', 'assets/nbegin.json', null, Phaser.Tilemap.TILED_JSON);
+		game.load.image('tilesets', 'assets/tilesets.png');
+        //game.load.image('ntilesets', 'assets/ntilesets.png');
+		game.load.image('talkbox', 'assets/talkbox.png');
+		game.load.spritesheet('player', 'assets/dude.png', 32, 48);
+        game.load.spritesheet('nplayer', 'assets/nplayer.png', 32, 48);
+		game.load.spritesheet('npc', 'assets/npc.png', 80, 72);
+		game.load.image('txt', 'assets/txt.png');
+		game.load.image('txt1', 'assets/txt1.png',70,70);
+        game.load.image('bootscreen','assets/bootscreen.png',800,600);
+        game.load.image('usernamebutton','assets/usernamebutton.png');
+        game.load.spritesheet('ball', 'assets/ball.png',32,32);
+        //game.load.image('fightStart','assets/fightStart.png');
+        //game.load.image('fireball','assets/fireball.png');
+        game.load.image('game-over','assets/game-over.png',350,450);
+        game.load.image('bullet','assets/bullet.png',11,11);
+	};
+	this.create=function () {
+		game.state.start('gamemenu');
+	};
+}
+
+function GameMenu(game){
+	this.create = function() {
+        game.add.image(0, 0, 'bootscreen');
+        var usernamebutton = game.add.button(game.world.centerX, 540, 'usernamebutton',this.lvl1);
+        usernamebutton.anchor.setTo(0.5, 0.5);
+    };
+	this.lvl1 = function(){
+		game.state.start('gamemain');
+    };
+}
+
+window.onload = function(){
+	game.state.add('boot',Boot);				
+	game.state.add('loading',Loading);	
+	game.state.add('gamemenu',GameMenu);
+	game.state.add('gamemain',GameMain);
+	game.state.start('boot');
+	}
+		</script>
+	</body>
+</html>
